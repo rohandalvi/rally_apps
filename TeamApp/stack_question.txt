@@ -1,0 +1,14 @@
+I am trying to write some js using Rally sdk to get a list of team members associated with a project. My Dropdown box will contain my current project as well a list of its child projects. Once selected, it will give a list of team members for the selected project.
+
+So far, I tried doing it in two ways:
+
+ 1. A rather simple approach without all child projects, in this I just get the first level child projects of my current project (not recursively getting all child projects).
+
+ 2. Recursively getting all child projects of current project.
+
+Till now, I am just able to complete (1) and just get all the first level child projects in the dropdown (haven't proceeded further to get the team members yet).However, I am having some problems in the approach (2).
+
+Using recursion, I am able to get all the projects in an array and pushing it correctly, but the list doesn't show up in the dropdown box. Note that I am testing my code by copy-pasting it in Rally as a custom html.I also do not get any error to understand what may be possibly wrong.
+
+This is my approach 1:
+
