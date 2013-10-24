@@ -23,6 +23,7 @@
          var textBox;
          var username;
          var child_project = new Array();
+         var child_seen = new Array();
          function onLoad() {
            //Add app code here
            loadOptionDropdown();
@@ -90,7 +91,9 @@
 					 * 2 scenarios, 1 -> User Not Found, 2-> User Found but no associated Team Memberships
 					 * Case 1 gives this alert, Case 2 gives a table with nothing to display
 					 */
+					
 					alert("No user found, please note the query works in the current workspace only.");
+					
 				}
               }
               function loadNameTable(allmemberships)
@@ -187,84 +190,53 @@
                 	var data = new Array();
                 	
                 	var project = results.projects;
-                	
-                	/*
-                	 * 
-                	 * Some code is commented that uses the recursive algorithm
-                	 */
-                	//var all_projects = new Array();
-                	
-                	data.push({label: project[0].Name, value: project[0].Name});
-                	
-                	if(project[0].Children != null)
-                	{
-                		for(var i=0;i<project[0].Children.length;i++)
-                		{
-                			//document.write("Number "+i+" "+project[0].Children[i].Name);
-                			data.push({label: project[0].Children[i].Name, value: project[0].Children[i].Name});
-                		}
-                	}
-                	        	
-                	
-        			//pass the first parent project to a function that recursively gets all child projects.
-        			
-        			//all_projects = get_child_recursively(project[0]);	
-        			
-        			// This prints all child projects recursively, but has a display problem.
-        			//document.write(JSON.stringify(all_projects));
-        			
-        			
-        			/*
-        			 * To push all the projects to data use this code, currently commented
-        			 * To use the recursive approach, some code above will need to be commented. ie on line 58
-        			 * and line 60 to 67
-        			  
-        			  
-   	    	 		  for(var i=0;i<all_projects.length;i++)
+
+                	var all_projects = new Array();
+
+        			all_projects = get_child_recursively(project[0]);	
+
+   	    	 		for(var i=0;i<all_projects.length;i++)
         			  {
         			  		data.push({label: all_projects[i].Name, value: all_projects[i].Name});
         					
-        			  }*/
+        			  }
         			
-        				
                 	projectDropDown = new rally.sdk.ui.basic.Dropdown({label: "Select Project", items: data, width: 250});
                 	projectDropDown.display("projectDropDown",projectDropDownChanged);
                 }
                 
-                //Recursive algorithm to get all child projects of a parent project
+                
+                
                 function get_child_recursively(parent_project)
                 {
-                		
+                	//Recursive algorithm to get all child projects of a parent project		
                 		
                 		projects_array.push(parent_project);
-                		
-                		if(parent_project.Children.length>0)
+                		if(parent_project.Children.length>=0)
                 		{
                 			for(var i=0;i<parent_project.Children.length;i++)
                 			{
                 				if(child_project.indexOf(parent_project.Children[i])<=-1)
                 					child_project.push(parent_project.Children[i]);
+              
                 			}
-                			for(var i=0;i<child_project.length;i++)
+                			while(child_project.length>0)
                 			{	
-                			
-                				var temp = child_project[i];
-                				child_project.splice(i,1);
+                				var temp = child_project[0];
+                				//document.write("\n "+(temp.Name));
+                				child_project.splice(0,1);
                 				get_child_recursively(temp);
                 			
                 			}
                 		}
                 		else{
-                			return;
+
+                				return;
                 		}
-                		if(child_project.length==1)
-                		{
-                			projects_array.push(parent_project);
-                			child_project.splice(child_project.indexOf(parent_project),1);
-                		}
+                			
                 		if(child_project.length==0){
-                			return projects_array;
-                		}
+                			 return projects_array;
+                		 }
                 		
           		}      
                 function projectDropDownChanged(dropdown,eventArgs){
